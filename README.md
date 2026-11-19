@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ENA COLLECTION (project PRIORITY)
 
-## Getting Started
+Online shop for ENA COLLECTION. Next.js + Supabase. Customers sign up, fill a cart, place an order,
+pay by bank transfer and upload their receipt. The owner confirms the receipt and
+moves the order through delivery (the owner arranges the rider herself). Customers watch the progress on their order page.
 
-First, run the development server:
+## What is inside
+- `src/`        the website (shop, cart, checkout, customer account, owner dashboard)
+- `public/`     logo
+- `supabase/`   database files. Run `001_schema.sql` and then `002_admin_tools.sql` in the Supabase SQL Editor
+- `vercel.json` a daily request that keeps the free Supabase project awake
+- `.env.local.example` the two settings the site needs
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Set up on your laptop
+1. Create the project (once):
+   `npx create-next-app@latest ena-collection --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-npm`
+2. In the project folder: `npm install @supabase/supabase-js @supabase/ssr`
+3. Copy everything from this zip into the project folder (choose Replace). Delete `src/app/favicon.ico`.
+4. Copy `.env.local.example` to `.env.local` and fill in your Supabase URL and publishable key.
+5. Run `npm run dev` and open http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Set up Supabase (once)
+1. SQL Editor: run `supabase/001_schema.sql`, then `supabase/002_admin_tools.sql`.
+2. Authentication > Users: add the owner (imadeprecious670@gmail.com) with a password.
+3. SQL Editor: make the owner an admin
+   `update public.profiles set role = 'admin' where id = (select id from auth.users where email = 'imadeprecious670@gmail.com');`
+4. Sign in at /login as the owner, open Dashboard > Settings and enter the bank details.
+5. Optional: Authentication > Providers > Email: turn off "Confirm email" while testing.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Sign in with Google (free)
+1. Supabase: Authentication > Sign In / Providers > Google. Turn it on and copy the Callback URL shown there.
+2. console.cloud.google.com: create a project, then APIs & Services > Credentials > Create credentials > OAuth client ID > Web application.
+   Add the Supabase Callback URL under Authorized redirect URIs. Copy the Client ID and Client secret.
+   (If asked, set up the OAuth consent screen first.)
+3. Paste the Client ID and Client secret into the Google provider in Supabase and save.
+4. Supabase: Authentication > URL Configuration: add `http://localhost:3000/**` (and later your Vercel address with `/**`) to Redirect URLs.
+5. Apple (iCloud) sign-in is not included: it needs a paid Apple Developer membership.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Put it online (free)
+1. Create a GitHub repository and push the project (`.env.local` is ignored by git on purpose).
+2. On vercel.com choose Add New > Project, import the repository.
+3. In Vercel, add the same two environment variables from `.env.local`, then Deploy.
+4. In Supabase, Authentication > URL Configuration: set Site URL to your Vercel address
+   (for example https://your-shop.vercel.app) and add `https://your-shop.vercel.app/**` to Redirect URLs.
+   This makes password reset emails work.
 
-## Learn More
+## Owner day-to-day
+- Orders: open an order, check the receipt against the bank alert, Confirm or Reject.
+- Then: Start processing, Mark ready, Out for delivery, Delivered. When marking out for delivery, you can type a message for the customer (for example the rider's name and number).
+- Products: Dashboard > Products. Categories: launch Clothing when ready. Delivery fees have their own page.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Not built yet
+- Paystack (the payments table is ready for it).
+- Automatic customer emails (needs a domain name). Use the "Message customer on WhatsApp" button on each order.
+- Discount codes.
