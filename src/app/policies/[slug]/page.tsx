@@ -15,8 +15,8 @@ const PAGES: Record<string, { title: string; paragraphs: string[] }> = {
   delivery: {
     title: 'Delivery',
     paragraphs: [
-      'We currently deliver to Edo State and Delta State. The delivery fee depends on your area and is shown at checkout before you pay.',
-      'Orders are paid by bank transfer. After you place an order, you upload your payment receipt, and we confirm it before your order is prepared and sent out with one of our riders.',
+      'We deliver to every state in Nigeria, including Abuja. The delivery fee depends on your state and area and is shown at checkout before you pay. Delivery time depends on your location, and we will confirm it with you once your payment is confirmed.',
+      'Orders are paid by bank transfer. After you place an order, you upload your payment receipt, and we confirm it before your order is prepared and sent out for delivery.',
       'Every order is packed discreetly.',
     ],
   },

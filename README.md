@@ -27,7 +27,13 @@ moves the order through delivery (the owner arranges the rider herself). Custome
 4. Sign in at /login as the owner, open Dashboard > Settings and enter the bank details.
 5. Optional: Authentication > Providers > Email: turn off "Confirm email" while testing.
 
-## Sign in with Google (free)
+## Clothing
+Dashboard > Categories > press Launch on Clothing. Then add clothing products in Dashboard > Products, choosing the Clothing category and adding one Option per size and colour (for example Medium - Red). A Clothing link appears in the menu by itself.
+
+## Install as an app
+Open the live site on a phone or laptop. Chrome and Edge show an Install button in the footer (and in the address bar). On iPhone, tap Share, then Add to Home Screen. It needs the https address from Vercel; it will not install from plain localhost builds in every browser.
+
+## Sign in with Google (not included now)
 1. Supabase: Authentication > Sign In / Providers > Google. Turn it on and copy the Callback URL shown there.
 2. console.cloud.google.com: create a project, then APIs & Services > Credentials > Create credentials > OAuth client ID > Web application.
    Add the Supabase Callback URL under Authorized redirect URIs. Copy the Client ID and Client secret.

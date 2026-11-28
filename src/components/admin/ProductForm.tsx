@@ -319,7 +319,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
 
         <div className="panel">
           <h2>Options (size, colour...)</h2>
-          <p className="muted">Optional. If you add options, each option has its own stock and the stock above is ignored.</p>
+          <p className="muted">Optional. For clothing add one option per size and colour, for example Medium - Red. Each option has its own stock and the stock above is ignored.</p>
           {variants.map((v, i) => (
             <div key={v.id ?? `new-${i}`} className="variant-row">
               <label className="field">

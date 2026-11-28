@@ -8,6 +8,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useCart } from '@/components/CartProvider';
 import AddressForm, { type Area } from '@/components/AddressForm';
 import { naira } from '@/lib/format';
+import { stateLabel } from '@/lib/states';
 import { CART_SELECT, isBuyable, unitPrice, type CartItem } from '@/lib/orders';
 
 type Address = {
@@ -63,18 +64,17 @@ export default function CheckoutPage() {
       </section>
     );
   }
-
-if (profile?.role === 'admin') {
-  return (
-    <section className="section">
-      <div className="container narrow">
-        <h1 className="page-title">Owner account</h1>
-        <p className="muted">Owner accounts cannot place orders. Use a customer account to test the shop.</p>
-        <Link href="/admin" className="btn">Go to the dashboard</Link>
-      </div>
-    </section>
-  );
-}
+  if (profile?.role === 'admin') {
+    return (
+      <section className="section">
+        <div className="container narrow">
+          <h1 className="page-title">Owner account</h1>
+          <p className="muted">Owner accounts cannot place orders. Use a customer account to test the shop.</p>
+          <Link href="/admin" className="btn">Go to the dashboard</Link>
+        </div>
+      </section>
+    );
+  }
 
   if (items === null) return <p className="container section muted">Loading...</p>;
   if (items.length === 0) {
@@ -105,9 +105,8 @@ if (profile?.role === 'admin') {
       return;
     }
     await refresh();
-    router.push(`/account/orders/${data}`);
+    router.push(`/account/orders/${data}?placed=1`);
   }
-
 
   return (
     <section className="section">
@@ -126,7 +125,7 @@ if (profile?.role === 'admin') {
                     <br />
                     {a.street}{a.landmark ? `, near ${a.landmark}` : ''}
                     <br />
-                    {ok ? `${a.delivery_areas?.name}, ${a.delivery_areas?.state} State - delivery ${naira(a.delivery_areas!.fee)}` : 'We no longer deliver to this area'}
+                    {ok ? `${a.delivery_areas?.name}, ${stateLabel(a.delivery_areas!.state)} - delivery ${naira(a.delivery_areas!.fee)}` : 'We no longer deliver to this area'}
                   </span>
                 </label>
               );
@@ -145,6 +144,15 @@ if (profile?.role === 'admin') {
             ) : (
               <button type="button" className="btn btn-outline" onClick={() => setAdding(true)}>Add a new address</button>
             )}
+            <h2 style={{ margin: '24px 0 12px' }}>Payment method</h2>
+            <label className="radio-card on">
+              <input type="radio" checked readOnly />
+              <span>
+                <strong>Bank transfer</strong>
+                <br />
+                <span className="muted">Place your order, pay to our bank account, then upload your receipt.</span>
+              </span>
+            </label>
             <label className="field" style={{ marginTop: 20 }}>
               Note for your order (optional)
               <textarea value={note} onChange={(e) => setNote(e.target.value)} />
@@ -166,9 +174,11 @@ if (profile?.role === 'admin') {
             </p>
             {error && <p className="error">{error}</p>}
             {!allBuyable && <p className="error">Some items are not available. Please review your cart.</p>}
-            <button className="btn" type="button" onClick={place} disabled={busy || !selected || !allBuyable}>
-              {busy ? 'Placing order...' : 'Place order'}
-            </button>
+            <div className="sticky-cta">
+              <button className="btn btn-block" type="button" onClick={place} disabled={busy || !selected || !allBuyable}>
+                {busy ? 'Placing order...' : `Place order · ${naira(subtotal + fee)}`}
+              </button>
+            </div>
           </div>
         </div>
       </div>

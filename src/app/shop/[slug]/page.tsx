@@ -6,6 +6,7 @@ import { naira } from '@/lib/format';
 import { whatsappLink } from '@/lib/site';
 import AddToCart from '@/components/AddToCart';
 import ProductGallery from '@/components/ProductGallery';
+import { BackIcon } from '@/components/Icons';
 
 export const revalidate = 30;
 
@@ -48,44 +49,45 @@ export default async function ProductPage({ params }: Props) {
   const lowStock = variants.length === 0 && p.stock_quantity > 0 && p.stock_quantity <= p.low_stock_threshold;
 
   return (
-    <section className="section">
-      <div className="container">
-        <p className="crumbs"><Link href="/">Home</Link> / <Link href="/shop">Shop</Link> / {p.name}</p>
-      </div>
-      <div className="container product-page">
+    <div className="pdp">
+      <div className="pdp-top">
+        <Link href="/shop" className="pdp-back" aria-label="Back to the shop">
+          <BackIcon />
+        </Link>
         <ProductGallery media={media} name={p.name} />
-        <div>
-          <h1 className="page-title">{p.name}</h1>
-          <p className="price price-lg">
-            {onSale ? (
-              <>
-                <strong>{naira(p.sale_price)}</strong>
-                <s className="muted">{naira(p.price)}</s>
-              </>
-            ) : (
-              <strong>{naira(p.price)}</strong>
-            )}
-          </p>
-          <p className={available ? 'stock-ok' : 'stock-out'}>
-            {!available ? 'Sold out' : lowStock ? `Only ${p.stock_quantity} left` : 'In stock'}
-          </p>
-          {p.description && <p className="prose">{p.description}</p>}
-          <AddToCart productId={p.id} variants={variants} baseStock={p.stock_quantity} basePrice={basePrice} />
-          <ul className="perks">
-            <li>Discreet packaging</li>
-            <li>Pay by bank transfer, then upload your receipt</li>
-            <li>Delivery in Edo and Delta</li>
-          </ul>
-          <a
-            className="btn btn-outline"
-            href={whatsappLink(`Hello ENA COLLECTION, I have a question about: ${p.name}`)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Ask about this product on WhatsApp
-          </a>
-        </div>
       </div>
-    </section>
+      <div className="pdp-sheet">
+        <p className="crumbs"><Link href="/">Home</Link> / <Link href="/shop">Shop</Link> / {p.name}</p>
+        <h1 className="page-title">{p.name}</h1>
+        <p className="price price-lg">
+          {onSale ? (
+            <>
+              <strong>{naira(p.sale_price)}</strong>
+              <s className="muted">{naira(p.price)}</s>
+            </>
+          ) : (
+            <strong>{naira(p.price)}</strong>
+          )}
+        </p>
+        <p className={available ? 'stock-ok' : 'stock-out'}>
+          {!available ? 'Sold out' : lowStock ? `Only ${p.stock_quantity} left` : 'In stock'}
+        </p>
+        {p.description && <p className="prose">{p.description}</p>}
+        <AddToCart productId={p.id} variants={variants} baseStock={p.stock_quantity} basePrice={basePrice} />
+        <ul className="perks">
+          <li>Discreet packaging</li>
+          <li>Pay by bank transfer, then upload your receipt</li>
+          <li>Delivery across Nigeria</li>
+        </ul>
+        <a
+          className="btn btn-outline"
+          href={whatsappLink(`Hello ENA COLLECTION, I have a question about: ${p.name}`)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ask about this product on WhatsApp
+        </a>
+      </div>
+    </div>
   );
 }

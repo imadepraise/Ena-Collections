@@ -33,6 +33,7 @@ export default function AddToCart({
   const hasVariants = variants.length > 0;
   const chosen = hasVariants ? variants.find((v) => v.id === variantId) : undefined;
   const stock = hasVariants ? chosen?.stock_quantity ?? 0 : baseStock;
+  const unit = chosen && chosen.price_override != null ? Number(chosen.price_override) : basePrice;
 
   async function add() {
     if (!user) {
@@ -64,15 +65,15 @@ export default function AddToCart({
   }
 
   if (profile?.role === 'admin') {
-  return (
-    <p className="notice">
-      You are signed in as the shop owner, so ordering is turned off. Use a customer account to place a test order.
-    </p>
-  );
-}
+    return (
+      <p className="notice">
+        You are signed in as the shop owner, so ordering is turned off. Use a customer account to place a test order.
+      </p>
+    );
+  }
 
   return (
-    <div className="card-box">
+    <div className="buy">
       {hasVariants && (
         <label className="field">
           Choose an option
@@ -87,21 +88,24 @@ export default function AddToCart({
           </select>
         </label>
       )}
-      <div className="qty" style={{ marginBottom: 14 }}>
-        <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Less">-</button>
-        <strong aria-live="polite">{qty}</strong>
-        <button type="button" onClick={() => setQty((q) => Math.min(Math.max(stock, 1), q + 1))} aria-label="More">+</button>
-      </div>
-      <div>
-        <button type="button" className="btn" onClick={add} disabled={busy || loading || stock <= 0}>
-          {stock <= 0 ? 'Sold out' : busy ? 'Adding...' : user ? 'Add to cart' : 'Sign in to add to cart'}
-        </button>
+      <div className="buy-row">
+        <div className="qty">
+          <button type="button" onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Less">-</button>
+          <strong aria-live="polite">{qty}</strong>
+          <button type="button" onClick={() => setQty((q) => Math.min(Math.max(stock, 1), q + 1))} aria-label="More">+</button>
+        </div>
+        <p className="buy-price">{naira(unit * qty)}</p>
       </div>
       {msg && (
-        <p className={msg.ok ? 'notice' : 'error'} style={{ marginTop: 14 }}>
+        <p className={msg.ok ? 'notice' : 'error'}>
           {msg.text} {msg.ok && <Link href="/cart" className="link-gold">View cart</Link>}
         </p>
       )}
+      <div className="sticky-cta">
+        <button type="button" className="btn btn-block" onClick={add} disabled={busy || loading || stock <= 0}>
+          {stock <= 0 ? 'Sold out' : busy ? 'Adding...' : user ? `Add to cart · ${naira(unit * qty)}` : 'Sign in to add to cart'}
+        </button>
+      </div>
     </div>
   );
 }

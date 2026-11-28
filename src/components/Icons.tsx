@@ -43,3 +43,40 @@ export const GoogleIcon = ({ size = 20 }: P) => (
     <path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 002.4 7.1L6 9.9c.8-2.6 3.2-4.5 6-4.5z" />
   </svg>
 );
+
+export const HomeIcon = ({ size = 24 }: P) => (
+  <svg {...base(size)}><path d="M4 11l8-7 8 7" /><path d="M6 10v9h12v-9" /><path d="M10 19v-5h4v5" /></svg>
+);
+export const BagIcon = ({ size = 24 }: P) => (
+  <svg {...base(size)}><path d="M5 8h14l-1 12H6L5 8z" /><path d="M9 8V6a3 3 0 016 0v2" /></svg>
+);
+export const ReceiptIcon = ({ size = 24 }: P) => (
+  <svg {...base(size)}><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z" /><path d="M9 8h6M9 12h6" /></svg>
+);
+export const UserIcon = ({ size = 24 }: P) => (
+  <svg {...base(size)}><circle cx="12" cy="8" r="4" /><path d="M4 20c1-4 4-6 8-6s7 2 8 6" /></svg>
+);
+export const GridIcon = ({ size = 24 }: P) => (
+  <svg {...base(size)}><rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><rect x="13" y="13" width="7" height="7" rx="1.5" /></svg>
+);
+export const SearchIcon = ({ size = 22 }: P) => (
+  <svg {...base(size)}><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" /></svg>
+);
+export const BackIcon = ({ size = 22 }: P) => (
+  <svg {...base(size)}><path d="M15 5l-7 7 7 7" /></svg>
+);
+export const CheckIcon = ({ size = 24 }: P) => (
+  <svg {...base(size)} strokeWidth={2.4}><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+);
+export const ChevronIcon = ({ size = 18 }: P) => (
+  <svg {...base(size)}><path d="M9 5l7 7-7 7" /></svg>
+);
+export const EyeIcon = ({ size = 20 }: P) => (
+  <svg {...base(size)}><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="2.8" /></svg>
+);
+export const HelpIcon = ({ size = 22 }: P) => (
+  <svg {...base(size)}><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01" /></svg>
+);
+export const LogoutIcon = ({ size = 22 }: P) => (
+  <svg {...base(size)}><path d="M10 4H5v16h5" /><path d="M14 8l4 4-4 4M18 12H9" /></svg>
+);

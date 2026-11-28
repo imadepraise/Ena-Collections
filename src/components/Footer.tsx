@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { SITE, whatsappLink } from '@/lib/site';
+import InstallApp from '@/components/InstallApp';
 
 export default function Footer() {
   return (
@@ -11,6 +12,7 @@ export default function Footer() {
           <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="btn btn-gold btn-sm">
             Chat with us on WhatsApp
           </a>
+          <InstallApp />
         </div>
         <div>
           <p className="footer-title">Shop</p>

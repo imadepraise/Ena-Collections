@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
+import { EyeIcon } from '@/components/Icons';
 
 function safeNextParam() {
   const next = new URLSearchParams(window.location.search).get('next');
@@ -17,10 +18,10 @@ export default function LoginPage() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
-
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,67 +67,66 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="section auth-section">
-      <div className="container">
-        <div className="auth-card">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.jpg" alt="ENA COLLECTION" className="auth-logo" />
-          <h1 className="auth-title">{mode === 'signin' ? 'Welcome back' : 'Create your account'}</h1>
-          <p className="muted auth-sub">
-            {mode === 'signin' ? 'Sign in to see your cart and orders.' : 'It takes a minute. Your details stay private.'}
-          </p>
+    <section className="auth-wrap">
+      <div className="auth-card">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.jpg" alt="ENA COLLECTION" className="auth-logo" />
+        <h1 className="auth-title">{mode === 'signin' ? 'Welcome back' : 'Create your account'}</h1>
+        <p className="muted auth-sub">
+          {mode === 'signin' ? 'Sign in to continue your shopping.' : 'It takes a minute. Your details stay private.'}
+        </p>
 
-          <p className="or"><span>or use your email</span></p>
-
-          <div className="tabs">
-            <button type="button" className={mode === 'signin' ? 'tab on' : 'tab'} onClick={() => setMode('signin')}>
-              Sign in
-            </button>
-            <button type="button" className={mode === 'signup' ? 'tab on' : 'tab'} onClick={() => setMode('signup')}>
-              Create account
-            </button>
-          </div>
-          {info && <p className="notice">{info}</p>}
-          {error && <p className="error">{error}</p>}
-          <form onSubmit={submit}>
-            {mode === 'signup' && (
-              <>
-                <label className="field">
-                  Full name
-                  <input value={name} onChange={(e) => setName(e.target.value)} required autoComplete="name" />
-                </label>
-                <label className="field">
-                  Phone number
-                  <input value={phone} onChange={(e) => setPhone(e.target.value)} required inputMode="tel" autoComplete="tel" />
-                </label>
-              </>
-            )}
-            <label className="field">
-              Email
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
-            </label>
-            <label className="field">
-              Password
+        {info && <p className="notice">{info}</p>}
+        {error && <p className="error">{error}</p>}
+        <form onSubmit={submit}>
+          {mode === 'signup' && (
+            <>
+              <label className="field">
+                Full name
+                <input value={name} onChange={(e) => setName(e.target.value)} required autoComplete="name" />
+              </label>
+              <label className="field">
+                Phone number
+                <input value={phone} onChange={(e) => setPhone(e.target.value)} required inputMode="tel" autoComplete="tel" />
+              </label>
+            </>
+          )}
+          <label className="field">
+            Email
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" placeholder="you@example.com" />
+          </label>
+          <label className="field">
+            Password
+            <span className="pw-wrap">
               <input
-                type="password"
+                type={show ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
               />
-            </label>
-            <button className="btn btn-block" type="submit" disabled={busy}>
-              {busy ? 'Please wait...' : mode === 'signin' ? 'Sign in' : 'Create account'}
-            </button>
-          </form>
+              <button type="button" className="pw-toggle" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'}>
+                <EyeIcon />
+              </button>
+            </span>
+          </label>
           {mode === 'signin' && (
-            <p style={{ marginTop: 16, textAlign: 'center' }}>
-              <Link href="/forgot-password" className="link-gold">
-                Forgot your password?
+            <p style={{ textAlign: 'right', margin: '-6px 0 16px' }}>
+              <Link href="/forgot-password" className="link-gold" style={{ fontSize: 14 }}>
+                Forgot password?
               </Link>
             </p>
           )}
-        </div>
+          <button className="btn btn-block btn-lg" type="submit" disabled={busy}>
+            {busy ? 'Please wait...' : mode === 'signin' ? 'Sign in' : 'Create account'}
+          </button>
+        </form>
+        <p className="auth-switch muted">
+          {mode === 'signin' ? 'New to ENA COLLECTION? ' : 'Already have an account? '}
+          <button type="button" className="link-btn" onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(null); }}>
+            {mode === 'signin' ? 'Create account' : 'Sign in'}
+          </button>
+        </p>
       </div>
     </section>
   );

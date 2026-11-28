@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import StatusPill from '@/components/StatusPill';
 import { naira } from '@/lib/format';
+import { stateLabel } from '@/lib/states';
 import { fmtDate, waPhone } from '@/lib/orders';
 
 type Payment = {
@@ -156,7 +157,7 @@ export default function AdminOrderDetail() {
           <h2>Delivery</h2>
           <label className="field">
             Message for the customer (optional)
-            <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="For example: Your rider is Sam, 0801 234 5678" />
+            <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="For example: Sent by courier, tracking number 12345" />
             <span className="muted">The customer sees this in the order history.</span>
           </label>
           <button type="button" className="btn" disabled={busy} onClick={() => run(() => sb.rpc('set_order_status', { p_order_id: order.id, p_status: next.to, p_note: note.trim() || null }), 'Status updated.')}>
@@ -170,7 +171,7 @@ export default function AdminOrderDetail() {
         <dl className="kv">
           <dt>Name</dt><dd>{order.recipient_name}</dd>
           <dt>Phone</dt><dd>{order.recipient_phone}</dd>
-          <dt>Address</dt><dd>{order.street}{order.landmark ? `, near ${order.landmark}` : ''}, {order.area_name}, {order.state} State</dd>
+          <dt>Address</dt><dd>{order.street}{order.landmark ? `, near ${order.landmark}` : ''}, {order.area_name}, {stateLabel(order.state)}</dd>
           {order.note && (<><dt>Note</dt><dd>{order.note}</dd></>)}
         </dl>
         <p style={{ marginTop: 14 }}>

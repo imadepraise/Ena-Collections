@@ -7,8 +7,10 @@ import { supabase } from '@/lib/supabase/client';
 import { useAuth } from '@/components/AuthProvider';
 import StatusPill from '@/components/StatusPill';
 import { naira } from '@/lib/format';
+import { stateLabel } from '@/lib/states';
 import { STAGES, fmtDate } from '@/lib/orders';
 import { compressImage } from '@/lib/image';
+import { CheckIcon } from '@/components/Icons';
 
 type OrderFull = {
   id: string;
@@ -40,6 +42,7 @@ export default function OrderDetailPage() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [placed, setPlaced] = useState(false);
 
   const load = useCallback(async () => {
     if (!user) return;
@@ -69,6 +72,10 @@ export default function OrderDetailPage() {
     const t = setInterval(load, 30000);
     return () => clearInterval(t);
   }, [load]);
+
+  useEffect(() => {
+    setPlaced(new URLSearchParams(window.location.search).get('placed') === '1');
+  }, []);
 
   async function uploadReceipt(file: File) {
     if (!user || !order) return;
@@ -148,8 +155,23 @@ export default function OrderDetailPage() {
         </div>
         <p className="muted">Placed {fmtDate(order.created_at)}</p>
 
+        {placed && (
+          <div className="success-card">
+            <div className="success-check"><CheckIcon size={38} /></div>
+            <h2>Order placed!</h2>
+            <p>
+              Thank you. Your order {order.reference} is saved.
+              {needsPayment ? ' Pay by bank transfer and upload your receipt below so we can confirm it.' : ''}
+            </p>
+            <div className="success-actions">
+              {needsPayment && <a href="#pay" className="btn btn-cream">Pay now</a>}
+              <Link href="/shop" className="btn btn-ghost">Continue shopping</Link>
+            </div>
+          </div>
+        )}
+
         {needsPayment && (
-          <div className="card-box">
+          <div className="card-box" id="pay">
             <h2 style={{ marginBottom: 10 }}>Pay for this order</h2>
             {order.status === 'payment_rejected' && (
               <p className="error">
@@ -231,7 +253,7 @@ export default function OrderDetailPage() {
             <br />
             {order.street}{order.landmark ? `, near ${order.landmark}` : ''}
             <br />
-            {order.area_name}, {order.state} State
+            {order.area_name}, {stateLabel(order.state)}
           </p>
           {order.note && <p className="muted">Note: {order.note}</p>}
         </div>

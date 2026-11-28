@@ -2,14 +2,25 @@
 
 import { useMemo, useState } from 'react';
 import ProductCard, { type ProductRow } from '@/components/ProductCard';
+import Reveal from '@/components/Reveal';
 
-export type Cat = { id: string; name: string };
+export type Cat = { id: string; name: string; slug?: string };
 
 const price = (p: ProductRow) => Number(p.sale_price ?? p.price);
 
-export default function ShopGrid({ products, categories }: { products: ProductRow[]; categories: Cat[] }) {
-  const [q, setQ] = useState('');
-  const [cat, setCat] = useState('all');
+export default function ShopGrid({
+  products,
+  categories,
+  initialCategory = 'all',
+  initialQuery = '',
+}: {
+  products: ProductRow[];
+  categories: Cat[];
+  initialCategory?: string;
+  initialQuery?: string;
+}) {
+  const [q, setQ] = useState(initialQuery);
+  const [cat, setCat] = useState(initialCategory);
   const [sort, setSort] = useState('new');
 
   const shown = useMemo(() => {
@@ -54,8 +65,10 @@ export default function ShopGrid({ products, categories }: { products: ProductRo
         <>
           <p className="muted result-count">{shown.length} {shown.length === 1 ? 'product' : 'products'}</p>
           <div className="product-grid">
-            {shown.map((p) => (
-              <ProductCard key={p.id} p={p} />
+            {shown.map((p, i) => (
+              <Reveal key={p.id} delay={(i % 4) * 70}>
+                <ProductCard p={p} index={i} />
+              </Reveal>
             ))}
           </div>
         </>

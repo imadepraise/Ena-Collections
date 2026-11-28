@@ -54,16 +54,16 @@ export default function CartPage() {
   }
 
   if (profile?.role === 'admin') {
-  return (
-    <section className="section">
-      <div className="container narrow">
-        <h1 className="page-title">Owner account</h1>
-        <p className="muted">Owner accounts cannot place orders. Use a customer account to test the shop.</p>
-        <Link href="/admin" className="btn">Go to the dashboard</Link>
-      </div>
-    </section>
-  );
-}
+    return (
+      <section className="section">
+        <div className="container narrow">
+          <h1 className="page-title">Owner account</h1>
+          <p className="muted">Owner accounts cannot place orders. Use a customer account to test the shop.</p>
+          <Link href="/admin" className="btn">Go to the dashboard</Link>
+        </div>
+      </section>
+    );
+  }
 
   const list = items ?? [];
   const subtotal = list.reduce((s, i) => s + unitPrice(i) * i.quantity, 0);
@@ -82,7 +82,7 @@ export default function CartPage() {
           </>
         ) : (
           <div className="two-col">
-            <div className="card-box">
+            <div className="cart-list">
               {msg && <p className="error">{msg}</p>}
               {list.map((item) => {
                 const p = item.products;
@@ -127,11 +127,13 @@ export default function CartPage() {
               <h2 style={{ marginBottom: 12 }}>Summary</h2>
               <div className="summary-row"><span>Subtotal</span><strong>{naira(subtotal)}</strong></div>
               <p className="muted" style={{ fontSize: 14 }}>The delivery fee is added at checkout, based on your area.</p>
-              {allBuyable ? (
-                <Link href="/checkout" className="btn">Go to checkout</Link>
-              ) : (
-                <button className="btn" disabled>Go to checkout</button>
-              )}
+              <div className="sticky-cta">
+                {allBuyable ? (
+                  <Link href="/checkout" className="btn btn-block">Checkout · {naira(subtotal)}</Link>
+                ) : (
+                  <button className="btn btn-block" disabled>Checkout</button>
+                )}
+              </div>
             </div>
           </div>
         )}
